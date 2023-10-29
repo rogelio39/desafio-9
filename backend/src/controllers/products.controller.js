@@ -1,4 +1,4 @@
-import { productModel } from "../models/products.models";
+import { productModel } from "../models/products.models.js";
 
 export const getProducts = async (req, res) => {
     const { limit, page, filter, sort } = req.query;
@@ -11,8 +11,10 @@ export const getProducts = async (req, res) => {
         const products = await productModel.paginate({ filter: filter }, { limit: lim, page: pag, sort: { price: ord } });
         if (products) {
             res.status(200).send(products);
+            console.log(products)
+        } else {
+            res.status(404).send({ error: 'productos no encontrados' });
         }
-        res.status(404).send({ error: 'productos no encontrados' });
     } catch (error) {
         res.status(500).send({ error: `error en consultar productos ${error}` });
     }

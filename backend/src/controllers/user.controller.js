@@ -1,4 +1,4 @@
-import { userModel } from "../models/users.models";
+import { userModel } from "../models/users.models.js";
 
 
 export const getUsers = async (req, res) => {
@@ -56,3 +56,5 @@ export const deleteUser = async (req, res) => {
         res.status(400).send({ respuesta: "error", mensaje: error });
     }
 }
+
+

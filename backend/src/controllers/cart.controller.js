@@ -1,5 +1,5 @@
-import { cartModel } from "../models/carts.models";
-import { productModel } from "../models/products.models";
+import { cartModel } from "../models/carts.models.js";
+import { productModel } from "../models/products.models.js";
 
 
 export const getCart =  async (req, res) => {
@@ -158,3 +158,10 @@ export const deleteCart = async (req, res) => {
         res.status(500).send({ respuesta: 'error al consultar carrito', mensaje: error })
     }
 }
+
+
+
+
+const sum = 1 + 1;
+
+console.log(sum);

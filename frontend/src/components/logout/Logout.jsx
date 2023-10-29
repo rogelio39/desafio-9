@@ -1,4 +1,16 @@
-document.addEventListener('DOMContentLoaded', () => {
+
+
+export default function Logout() {
+    return (
+        <div>
+
+        </div>
+    )
+}
+
+
+
+/* document.addEventListener('DOMContentLoaded', () => {
     const logoutButton = document.getElementById('logout');
 
     logoutButton.addEventListener('click', async () => {
@@ -22,3 +34,4 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+*/
