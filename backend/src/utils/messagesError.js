@@ -30,6 +30,7 @@ export const authorization = (rol) => {
         }
 
         if(req.user.user.rol != rol){
+            console.log(req.user.user.rol)
             return res.status(401).send({error: 'do not have permissions'})
         }
 

@@ -77,8 +77,9 @@ const initializePassport = () => {
                 }
                 if (validatePassword(password, user.password)) {
                     return done(null, user);
+                } else {
+                    return done(null, false);
                 }
-                return done(null, false);
 
             } catch (error) {
                 return done(error)

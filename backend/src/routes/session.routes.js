@@ -4,6 +4,7 @@ import {passportError, authorization} from '../utils/messagesError.js';
 import { generateToken } from "../utils/jwt.js";
 const sessionRouter = Router();
 
+
 sessionRouter.post('/login', passport.authenticate('login'), async (req, res) => {
     try{
         if(!req.user){
@@ -18,11 +19,8 @@ sessionRouter.post('/login', passport.authenticate('login'), async (req, res) =>
 
         //generamos el token
         const token = generateToken(req.user);
-        //enviamos el token por cookie
-        res.cookie('jwtCookie', token, {
-            maxAge: 4320000 //12 hs en mili segundos
-        });
-        res.status(200).send({payload: req.user});
+        console.log(token);
+        res.status(200).send({message: "usuario logueado", token});
     }catch(error){
         res.status(500).send({message: `error al iniciar  sesion ${error}`});
     }

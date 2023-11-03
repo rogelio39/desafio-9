@@ -20,16 +20,32 @@ export const getProducts = async (req, res) => {
     }
 }
 
-export const getProduct = async (req, res) => {
+export const getProductById = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const product = await productModel.findById(id);
+        if (product) {
+            res.status(200).send(product);
+        } else {
+            res.status(404).send({ error: 'producto no encontrado' });
+        }
+    } catch (error) {
+        res.status(500).send({ error: `error en consultar producto ${error}` });
+    }
+
+}
+
+export const postProduct = async (req, res) => {
     const { title, description, code, price, stock, category } = req.body;
 
     try {
         const product = await productModel.create({ title, description, code, price, stock, category });
         if (product) {
             res.status(201).send(product);
+        } else {
+            res.status(400).send({ error: 'error en crear producto' });
         }
 
-        res.status(400).send({ error: 'error en crear producto' });
     } catch (error) {
         //este error code es de llave duplicada
         if (error.code == 11000) {
@@ -40,19 +56,7 @@ export const getProduct = async (req, res) => {
 
 }
 
-export const postProduct = async (req, res) => {
-    const { id } = req.params;
-    try {
-        const product = await productModel.findById(id);
-        if (product) {
-            res.status(200).send(product);
-        }
-        res.status(404).send({ error: 'producto no encontrado' });
-    } catch (error) {
-        res.status(500).send({ error: `error en consultar producto ${error}` });
-    }
 
-}
 
 export const putProduct = async (req, res) => {
     const { id } = req.params;

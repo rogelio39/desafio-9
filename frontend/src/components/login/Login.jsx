@@ -11,22 +11,23 @@ const Login = () => {
         e.preventDefault()
         const datForm = new FormData(formRef.current) //Tranformo un HTML en un objet iterator
         const data = Object.fromEntries(datForm)
-        console.log(data)
-
         const response = await fetch('http://localhost:4000/api/sessions/login', {
             method: 'POST',
+            credentials: 'include',
             headers: {
-                'Content-type': 'application/json'
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify(data)
         })
 
         if (response.status == 200) {
             const data = await response.json()
-            document.cookie = `jwtCookie=${data.token}; expires${new Date(Date.now() + 1 * 24 * 60 * 60 * 1000).toUTCString()};path=/;httponly=true`
+            document.cookie = `jwtCookie=${data.token}; expires=${new Date(Date.now() + 1 * 24 * 60 * 60 * 1000).toUTCString()}; path=/; httpOnly=true`;
             navigate('/products')
+        } else if (response.status === 401) {
+            console.error('Credenciales incorrectas. Por favor, verifica tu email y contraseña.');
         } else {
-            console.log(response)
+            console.log("Ha ocurrido un error al iniciar sesion")
         }
     }
 
@@ -37,7 +38,7 @@ const Login = () => {
             <form id="idForm" onSubmit={handleSumbit} ref={formRef}>
 
                 <label htmlFor="email">Enter your email</label>
-                <input type="email" id="email" name="email" autoComplete='userName' required/>
+                <input type="email" id="email" name="email" autoComplete='userName' required />
 
                 <label htmlFor="password">Enter your password</label>
                 <input type="password" id="password" name="password" autoComplete='currentPassword' required />

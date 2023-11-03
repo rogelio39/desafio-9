@@ -11,7 +11,14 @@ import cors from 'cors';
 import router from './routes/index.routes.js';
 
 
-const whiteList = ['http://192.168.100.82:5173']
+
+
+const PORT = 4000;
+
+const app = express();
+
+    
+const whiteList = ['http://192.168.100.206:5173']
 
 
 const corsOptions = {
@@ -21,14 +28,9 @@ const corsOptions = {
         } else {
             callback(new Error('access denied'));
         }
-    }
+    },
+    credentials: true
 }
-
-
-const PORT = 4000;
-
-const app = express();
-
 
 
 app.use(express.json());
@@ -66,6 +68,7 @@ mongoose.connect(process.env.MONGO_URL)
     }).catch(() => console.log('error en conexion a DB'));
 
 
+
 //db routes
 app.use('/', router);
 
@@ -74,3 +77,9 @@ app.use('/', router);
 app.listen(PORT, () => {
     console.log(`server on PORT ${PORT}`)
 })
+
+
+
+
+
+
