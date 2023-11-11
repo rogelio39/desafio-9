@@ -19,16 +19,17 @@ const initializePassport = () => {
     const cookieExtractor = req => {
         // console.log("cookie: ", req.cookies)
 
-        const token = req.cookies.jwtCookie ? req.cookies.jwtCookie : {};
 
-        // console.log("TOKEN: ", token)
+        const token = req.headers.authorization ? req.headers.authorization : {};
+
         return token;
     }
 
+
     passport.use('jwt', new JWTStrategy({
         jwtFromRequest: ExtractJWT.fromExtractors([cookieExtractor]), //el token vendra desde cookieExtractor.
-        secretOrKey: process.env.JWT_SECRET
-
+        secretOrKey: 
+        process.env.JWT_SECRET
     }, async (jwt_payload, done) => {//jwt_payload = info del token (en este caso datos del cliente)                            
         try {
             console.log("payload: ", jwt_payload);

@@ -11,7 +11,6 @@ export const getProducts = async (req, res) => {
         const products = await productModel.paginate({ filter: filter }, { limit: lim, page: pag, sort: { price: ord } });
         if (products) {
             res.status(200).send(products);
-            console.log(products)
         } else {
             res.status(404).send({ error: 'productos no encontrados' });
         }
@@ -50,8 +49,9 @@ export const postProduct = async (req, res) => {
         //este error code es de llave duplicada
         if (error.code == 11000) {
             res.status(400).send({ error: 'producto ya creado con llave duplicada' });
+        } else {
+            res.status(500).send({ error: `error en crear producto ${error}` });
         }
-        res.status(500).send({ error: `error en crear producto ${error}` });
     }
 
 }

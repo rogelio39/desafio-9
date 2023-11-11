@@ -3,8 +3,8 @@ import jwt from 'jsonwebtoken';
 
 export const generateToken = (user) => {
     
-
-    const token = jwt.sign({user}, process.env.JWT_SECRET, {expiresIn: '12h'})
+//process.env.JWT_SECRET
+    const token = jwt.sign({user}, process.env.JWT_SECRET , {expiresIn: '12h'})
     return token; 
 }
 
@@ -19,7 +19,7 @@ export const authToken = (req, res, next) => {
     //nos quedamos con el token y descartamos el bearer
     const token = authHeader.split(' ')[1]; 
 
-    jwt.sign(token, process.env.JWT_SECRET, (error, credential) => {
+    jwt.sign(token, "crack", (error, credential) => {
         if(error){
             return res.status(403).send({error: 'usuario no autorizado: token invalido'})
         }

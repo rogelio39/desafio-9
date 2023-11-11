@@ -1,82 +1,21 @@
 import { Router } from "express";
 import passport from "passport";
-import {passportError, authorization} from '../utils/messagesError.js';
-import { generateToken } from "../utils/jwt.js";
+import { passportError, authorization } from '../utils/messagesError.js';
+import { login, register, github, githubCallback, current, logout } from "../controllers/session.controller.js";
+
 const sessionRouter = Router();
 
 
-sessionRouter.post('/login', passport.authenticate('login'), async (req, res) => {
-    try{
-        if(!req.user){
-            res.status(401).send({message: 'invalid user'})
-        }
-        req.session.user = {
-            first_name : req.user.first_name,
-            last_name : req.user.last_name,
-            age : req.user.age,
-            email : req.user.email,
-        };    
-
-        //generamos el token
-        const token = generateToken(req.user);
-        console.log(token);
-        res.status(200).send({message: "usuario logueado", token});
-    }catch(error){
-        res.status(500).send({message: `error al iniciar  sesion ${error}`});
-    }
-});
-
-sessionRouter.post('/register', passport.authenticate('register'), async (req, res) => {
-    try{
-        if(!req.user){
-            res.status(400).send({message: 'existing user'})
-        }
-        
-        return res.status(200).send({mensaje : 'User created'});
-
-    }catch(error){
-        res.status(500).send({message: `Error register ${error}`});
-    }
-});
-
-
-
-sessionRouter.get('/github', passport.authenticate('github', {scope: ['user: email']} ), (req, res) => {
-    res.status(200).send({message: 'usuario registrado'});
-})
-
-
-sessionRouter.get('/githubCallback', passport.authenticate('github'), (req, res) => {
-    req.session.user = req.user;
-    res.status(200).send({message: 'usuario logueado'});
-})
-
-sessionRouter.get('/testJWT', passport.authenticate('jwt', { session : false}), (req,res) => {
-    console.log(req)
-    res.send(req.user);
-})
-
-
-sessionRouter.get('/current', passportError('jwt'), authorization('user'), (req,res) => {  
-    res.send(req.user);
-})
-
-
-
-sessionRouter.get('/logout', async (req, res) => {
-    try{
-        if(req.session.user){
-            req.session.destroy();
-            res.clearCookie('jwtCookie');
-            res.status(200).send({resultado: 'usuario deslogueado'})
-        }
-        } catch(error){
-        res.status(400).send({error:`error en logout ${error}`});
-    }
-});
-
-
+sessionRouter.post('/login', passport.authenticate('login'), login);
+sessionRouter.post('/register', passport.authenticate('register'), register);
+sessionRouter.get('/github', passport.authenticate('github', { scope: ['user: email'] }), github)
+sessionRouter.get('/githubCallback', passport.authenticate('github'), githubCallback )
+sessionRouter.get('/current', passportError('jwt'), authorization('user'),  current)
+sessionRouter.get('/logout', logout);
 
 
 
 export default sessionRouter;
+
+
+

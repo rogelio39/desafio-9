@@ -20,7 +20,7 @@ const Products = () => {
                     const data = await response.json();
                     setProducts(data.docs);
                 } else {
-                    console.error(`Error getting productos ${response.status}`);
+                    console.error(`Error getting products ${response.status}`);
                 }
             } catch (error) {
                 console.error(`Error getting products ${error}`);

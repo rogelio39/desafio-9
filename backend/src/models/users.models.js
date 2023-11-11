@@ -32,7 +32,7 @@ const userSchema = new Schema({
     },
     rol:{
         type: String,
-        default:'user'
+        default:'admin'
     }
 
 })

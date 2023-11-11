@@ -18,7 +18,7 @@ const PORT = 4000;
 const app = express();
 
     
-const whiteList = ['http://192.168.100.206:5173']
+const whiteList = ['http://192.168.100.3:5173']
 
 
 const corsOptions = {
@@ -34,7 +34,6 @@ const corsOptions = {
 
 
 app.use(express.json());
-app.use(cors(corsOptions));
 app.use(cookieParser(process.env.SIGNED_COOKIE)) // La cookie esta firmada
 app.use(session({
     store: MongoStore.create({
@@ -51,6 +50,13 @@ app.use(session({
     saveUninitialized: false //Fuerzo a guardar la session a pesar de no tener ningun dato
 }))
 app.use(express.urlencoded({ extended: true }));
+app.use(cors(corsOptions));
+
+// Middleware de prueba para imprimir cookies
+app.use((req, res, next) => {
+    console.log('Cookies:', req.cookies);
+    next();
+});
 
 //inicializamos la estrategia
 initializePassport();
