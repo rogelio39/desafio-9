@@ -78,7 +78,7 @@ export const deleteProdCart = async (req, res) => {
 }
 export const putProductToCart = async (req, res) => {
     try {
-        const { cid } = req.params;
+        const { cid, pid } = req.params;
         const { products } = req.body;
 
         //chequeamos si el carrito existe y almacenamos ese valor en la variable cart
