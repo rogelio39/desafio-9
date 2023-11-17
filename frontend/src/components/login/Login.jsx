@@ -11,7 +11,6 @@ const Login = () => {
         e.preventDefault()
         const datForm = new FormData(formRef.current) //Tranformo un HTML en un objet iterator
         const data = Object.fromEntries(datForm)
-        console.log(data)
         const response = await fetch('http://localhost:4000/api/sessions/login', {
             method: 'POST',
             credentials: 'include',

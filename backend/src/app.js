@@ -18,7 +18,7 @@ const PORT = 4000;
 const app = express();
 
     
-const whiteList = ['http://192.168.100.3:5173']
+const whiteList = ['http://192.168.100.108:5173']
 
 
 const corsOptions = {
@@ -51,12 +51,6 @@ app.use(session({
 }))
 app.use(express.urlencoded({ extended: true }));
 app.use(cors(corsOptions));
-
-// Middleware de prueba para imprimir cookies
-app.use((req, res, next) => {
-    console.log('Cookies:', req.cookies);
-    next();
-});
 
 //inicializamos la estrategia
 initializePassport();

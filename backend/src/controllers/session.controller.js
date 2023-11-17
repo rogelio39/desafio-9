@@ -16,12 +16,6 @@ export const login = async (req, res) => {
         // };
         // res.status(200).send({usuario: 'usuario logueado'})
 
-        //generamos el token
-        const token = generateToken(req.user);
-        res.cookie('jwtCookie', token, {
-            maxAge: 4320000 //12 hs en mili segundos
-        });
-        console.log(req.cookies)
         res.status(200).send({token});
     } catch (error) {
         res.status(500).send({ message: `error al iniciar  sesion ${error}` });

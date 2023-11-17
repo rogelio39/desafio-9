@@ -20,13 +20,13 @@ const Checkout = () => {
 
             if (response.ok) {
                 const data = await response.json();
-                console.log("orden de compra generada con exito");
-                console.log(data.ticket.code)
+                console.log("compra realizada")
+                console.log(data.ticket)
                 setTicket(data.ticket);
-            } else if (response.status === 401) {
-                console.error('Error al registrarse', response);
+            } else if (response.status === 404) {
+                console.error('Errores 404', response);
             } else {
-                console.log(response)
+                console.log("error 500", response)
             }
         } catch (error) {
             console.log('error al registrarse', error);

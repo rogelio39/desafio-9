@@ -79,8 +79,7 @@ export const deleteProdCart = async (req, res) => {
 export const putProductToCart = async (req, res) => {
     try {
         const { cid, pid } = req.params;
-        const { products } = req.body;
-
+        const { products } = req.body
         //chequeamos si el carrito existe y almacenamos ese valor en la variable cart
         const cart = await cartModel.findById(cid);
         if (!cart) {
@@ -159,9 +158,3 @@ export const deleteCart = async (req, res) => {
     }
 }
 
-
-
-
-const sum = 1 + 1;
-
-console.log(sum);
