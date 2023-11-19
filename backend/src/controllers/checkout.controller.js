@@ -5,39 +5,34 @@ import { productModel } from "../models/products.models.js";
 
 export const createTicket = async (req, res) => {
     try {
-        let amount = 0;
-        let purchaser;
-        let product;
         const { cid } = req.params;
         const cart = await cartModel.findById(cid);
-        const cartId = cart._id;
-        const user = await userModel.findOne({ cart: cartId });
-        purchaser = user.email;
+        const user = await userModel.findOne({ cart: cid });
+        let purchaser = user.email;
+        let amount = 0;
+        let invalidProducts = [];
         if (cart) {
             //FILTRAR PRODUCTOS QUE SUPEREN EL STOCK PARA AGREGARLOS A LA ORDEN DEL CHECKOUT
             const filteredProducts = await Promise.all(cart.products.map(async (prod) => {
-                product = await productModel.findById(prod.id_prod._id);
-                if (!(prod.quantity < product.stock)) {
+                let product = await productModel.findById(prod.id_prod._id);
+                if (prod.quantity > product.stock) {
+                    console.log("productos no suficientes")
+                    //array para actualizar carrito
+                    invalidProducts.push(prod);
                     return null
-                }
-                else {
+                } else {
                     const updatedStock = product.stock - prod.quantity;
-                    await productModel.findByIdAndUpdate(product._id, {stock: updatedStock});
+                    await productModel.findByIdAndUpdate(product._id, { stock: updatedStock });
+                    console.log("producto que va para orden", prod)
                     return prod;
                 }
             }));
+
             // Filtra los productos que cumplen la condición y elimina los nulos
             const validProducts = filteredProducts.filter(Boolean);
 
             //ACTUALIZAR CARRITO PARA QUE QUEDE SOLO CON AQUELLOS PRODUCTOS CUYA CANTIDAD FUE SUPERIOR AL STOCK
-
-            const updatedCart = await Promise.all(cart.products.map(async (prod) => {
-                product = await productModel.findById(prod.id_prod._id);
-                return prod.quantity > product.stock ? prod : null;
-            } ))
-
-            const finalCart = updatedCart.filter(Boolean);
-            await cartModel.findByIdAndUpdate(cartId, {products: finalCart})
+            await cartModel.findByIdAndUpdate(cid, { products: invalidProducts })
             if (validProducts.length > 0) {
                 validProducts.forEach(prod => {
                     amount += prod.quantity * prod.id_prod.price;
@@ -56,6 +51,8 @@ export const createTicket = async (req, res) => {
             res.status(404).send({ "error al procesar carrito": error })
         }
     } catch (error) {
-        res.status(500).send({ "error al generar ticket": error });
+        console.error("Error en el servidor:", error);
+        res.status(500).send({ error: "Error en el servidor", details: error });
     }
+
 }

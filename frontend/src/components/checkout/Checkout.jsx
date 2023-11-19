@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Ticket from "../ticket/Ticket";
+import { useParams } from "react-router-dom";
 
 
 const Checkout = () => {
@@ -7,11 +8,11 @@ const Checkout = () => {
     const [ticket, setTicket] = useState({});
     const [viewButtonOrder, setViewButtonOrder] = useState(false);
     const [showOrderDetails, setShowOrderDetails] = useState(false);
+    const {cartId} = useParams('');
 
     const getTicket = async () => {
-
         try {
-            const response = await fetch('http://localhost:4000/api/checkout/652d64699198c0473c2c1aa2', {
+            const response = await fetch(`http://localhost:4000/api/checkout/${cartId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -29,7 +30,7 @@ const Checkout = () => {
                 console.log("error 500", response)
             }
         } catch (error) {
-            console.log('error al registrarse', error);
+            console.log('error', error);
         }
 
         setViewButtonOrder(true);

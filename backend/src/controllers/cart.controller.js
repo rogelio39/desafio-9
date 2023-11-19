@@ -2,7 +2,7 @@ import { cartModel } from "../models/carts.models.js";
 import { productModel } from "../models/products.models.js";
 
 
-export const getCart =  async (req, res) => {
+export const getCart = async (req, res) => {
     try {
         const { cid } = req.params;
         const cart = await cartModel.findById(cid)
@@ -19,23 +19,19 @@ export const postCart = async (req, res) => {
     try {
         const { cid, pid } = req.params;
         const { quantity } = req.body;
-        //chequeamos si el carrito existe y almacenamos ese valor en la variable cart
+
         const cart = await cartModel.findById(cid)
         if (cart) {
-            //chequeamos si el producto existe en la base de datos.
             const product = await productModel.findById(pid);
             if (product) {
-                //chequeamos si el producto existe en el carrito
                 const index = cart.products.findIndex(prod => prod.id_prod._id.toString() === pid);
                 if (index != -1) {
                     cart.products[index].quantity += quantity;
                 } else {
                     cart.products.push({ id_prod: pid, quantity: quantity });
                 }
-                //actualizamos el carrito
                 const respuesta = await cartModel.findByIdAndUpdate(cid, { products: cart.products });
                 res.status(200).send({ respuesta: 'ok', mensaje: respuesta });
-
             } else {
                 res.status(404).send({ respuesta: 'error al agregar producto al carrito', mensaje: 'product not found' });
             }
@@ -46,6 +42,7 @@ export const postCart = async (req, res) => {
         res.status(500).send({ respuesta: 'error al agregar producto al carrito', mensaje: error })
     }
 }
+
 
 export const deleteProdCart = async (req, res) => {
     try {
@@ -95,7 +92,7 @@ export const putProductToCart = async (req, res) => {
             if (index != -1) {
                 throw new Error(`Producto ya existente: ${product._id.toString()}`);
             }
-            return {id_prod: prod._id, quantity: prod.quantity};
+            return { id_prod: prod._id, quantity: prod.quantity };
         });
 
         try {
@@ -123,20 +120,20 @@ export const putUpdatedQuantityProductToCart = async (req, res) => {
         if (cart) {
             //chequeamos si el producto existe
             const product = await productModel.findById(pid);
-            if(product) {
+            if (product) {
                 //chequeamos si existe en carrito
                 const index = cart.products.findIndex(cartProd => cartProd.id_prod._id.toString() === pid);
-                if(index != -1){
+                if (index != -1) {
                     cart.products[index].quantity = quantity;
                 } else {
-                    res.status(404).send({respuesta : 'error', mensaje: 'error, el producto no existe, no puedes actualizar la cantidad de productos no existentes, agregar el producto a carrito primero'});
+                    res.status(404).send({ respuesta: 'error', mensaje: 'error, el producto no existe, no puedes actualizar la cantidad de productos no existentes, agregar el producto a carrito primero' });
                 }
                 const respuesta = await cartModel.findByIdAndUpdate(cid, { products: cart.products });
-                res.status(200).send({respuesta: 'ok', mensaje: `cantidad de producto con id ${product._id} actualizada con exito a ${quantity}`});
+                res.status(200).send({ respuesta: 'ok', mensaje: `cantidad de producto con id ${product._id} actualizada con exito a ${quantity}` });
             }
-    } else {
-        res.status(404).send({ respuesta: 'error al agregar producto al carrito', mensaje: 'Carrito no existe' });
-    }
+        } else {
+            res.status(404).send({ respuesta: 'error al agregar producto al carrito', mensaje: 'Carrito no existe' });
+        }
     } catch (error) {
         res.status(500).send({ respuesta: 'error al agregar producto al carrito', mensaje: error.message })
     }
@@ -151,8 +148,8 @@ export const deleteCart = async (req, res) => {
         } else {
             res.status(404).send({ respuesta: 'error al consultar carrito', mensaje: 'error' });
         }
-        const respuesta = await cartModel.findByIdAndUpdate(cid, {products : cart.products})
-        res.status(200).send({respuesta: 'ok', mensaje : respuesta});
+        const respuesta = await cartModel.findByIdAndUpdate(cid, { products: cart.products })
+        res.status(200).send({ respuesta: 'ok', mensaje: respuesta });
     } catch (error) {
         res.status(500).send({ respuesta: 'error al consultar carrito', mensaje: error })
     }
