@@ -22,13 +22,15 @@ const Login = () => {
 
 
         if (response.status == 200) {
-            const datos = await response.json()
-            document.cookie = `jwtCookie=${datos.token}; expires=${new Date(Date.now() + 1 * 24 * 60 * 60 * 1000).toUTCString()}; path=/; SameSite=None; Secure`;
+            const datos = await response.json();
+            document.cookie = `jwtCookie=${datos.token}; expires=${new Date(Date.now() + 1 * 24 * 60 * 60 * 1000).toUTCString()}; path=/;`;
             navigate('/products')
         } else if (response.status === 401) {
+            const datos = await response.json();
+            console.log(datos);
             console.error('Credenciales incorrectas. Por favor, verifica tu email y contraseña.', response);
         } else {
-            const datos = response.json()
+            const datos = await response.json()
             console.log("RESPONSE", datos)
         }
     }

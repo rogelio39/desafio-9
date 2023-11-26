@@ -13,17 +13,18 @@ import router from './routes/index.routes.js';
 
 
 
+
 const PORT = 4000;
 
 const app = express();
 
-    
-const whiteList = ['http://192.168.100.108:5173']
+
+const whiteList = ['http://192.168.100.243:5173']
 
 
 const corsOptions = {
-    origin: function(origin, callback) {
-        if(whiteList.indexOf(origin) != -1 || !origin){
+    origin: function (origin, callback) {
+        if (whiteList.indexOf(origin) != -1 || !origin) {
             callback(null, true);
         } else {
             callback(new Error('access denied'));

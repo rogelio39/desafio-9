@@ -16,7 +16,15 @@ export const login = async (req, res) => {
         // };
         // res.status(200).send({usuario: 'usuario logueado'})
 
-        res.status(200).send({token});
+        //generamos el token
+        const token = generateToken(req.user);
+        // //enviamos el token por cookie
+        // res.cookie('jwtCookie', token, {
+        //     maxAge: 4320000 //12 hs en mili segundos
+        // });
+        // res.status(200).send({ payload: req.user });
+
+        res.status(200).send({ token });
     } catch (error) {
         res.status(500).send({ message: `error al iniciar  sesion ${error}` });
     }
@@ -51,7 +59,8 @@ export const logout = async (req, res) => {
         // if (req.session.user) {
         //     req.session.destroy();
         // } sino, va esto:
-        res.clearCookie('jwtCookie');
+        // res.clearCookie('jwtCookie');
+        // window.localStorage.removeItem('jwtCookie');
         res.status(200).send({ resultado: 'usuario deslogueado' })
     } catch (error) {
         res.status(400).send({ error: `error en logout ${error}` });
